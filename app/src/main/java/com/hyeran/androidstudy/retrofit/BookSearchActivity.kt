@@ -2,10 +2,10 @@ package com.hyeran.androidstudy.retrofit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import com.hyeran.androidstudy.R
-import com.hyeran.androidstudy.common.showToast
+import com.hyeran.androidstudy.extension_function.customEnqueue
+import com.hyeran.androidstudy.extension_function.showToast
 import kotlinx.android.synthetic.main.activity_book_search.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -25,7 +25,7 @@ class BookSearchActivity : AppCompatActivity() {
 
     private fun setEventListener() {
         et_searchbox_booksearch.setOnKeyListener { _, i, keyEvent ->
-            if(i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
+            if (i == KeyEvent.KEYCODE_ENTER && keyEvent.action == KeyEvent.ACTION_DOWN) {
                 searchBook()
             }
             return@setOnKeyListener true
@@ -37,7 +37,7 @@ class BookSearchActivity : AppCompatActivity() {
 
     private fun searchBook() {
         val titleToSearch = et_searchbox_booksearch.text.toString()
-        if(titleToSearch.isBlank()) {
+        if (titleToSearch.isBlank()) {
             showToast("검색어를 입력해주세요.")
         } else {
             requestToServer(titleToSearch)
@@ -47,20 +47,28 @@ class BookSearchActivity : AppCompatActivity() {
     private fun requestToServer(titleToSearch: String) {
         KakaoBookImpl.service.getBookList(
             title = titleToSearch
-        ).enqueue(object : Callback<ResponseDto> {
-            override fun onFailure(call: Call<ResponseDto>, t: Throwable) {
-                showToast("통신 상태를 확인해주세요.")
-            }
-
-            override fun onResponse(call: Call<ResponseDto>, response: Response<ResponseDto>) {
-                if(response.isSuccessful) {
-                    bookAdapter.dataList = response.body()!!.documents as ArrayList<BookResponseDto>
-                    bookAdapter.notifyDataSetChanged()
-                } else {
-                    showToast("에러 코드: ${response.code()}")
-                }
-            }
-
-        })
+        ).customEnqueue(
+            onFail = { showToast(it) },
+            onSuccess = {
+                bookAdapter.dataList = it.documents as ArrayList<BookResponseDto>
+                bookAdapter.notifyDataSetChanged()
+            },
+            onError = { showToast(it) }
+        )
+        /** 확장함수 안썼을 떄 **/
+//            .enqueue(object : Callback<ResponseDto> {
+//                override fun onFailure(call: Call<ResponseDto>, t: Throwable) {
+//
+//                }
+//
+//                override fun onResponse(call: Call<ResponseDto>, response: Response<ResponseDto>) {
+//                    if (response.isSuccessful) {
+//
+//                    } else {
+//                        showToast("에러 코드: ${response.code()}")
+//                    }
+//                }
+//
+//            })
     }
 }
