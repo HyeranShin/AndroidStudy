@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".lifecycle.fragment.BlankFragment"
+    android:background="@android:color/holo_green_light"
+    android:id="@+id/framelayout_blankfragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Fragment의 생명주기에 대해 알아봅시다!"
+        android:textSize="20sp"
+        android:fontFamily="@font/font_medium"
+        android:textColor="@android:color/black"/>
+
+</FrameLayout>
