@@ -41,6 +41,12 @@ class BlankFragment : Fragment() {
         framelayout_blankfragment.setOnClickListener {
             val fragmentTransaction : FragmentTransaction = activity!!.supportFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.frame_fragment_activity, BlankFragment2())
+            fragmentTransaction.addToBackStack(null)
+            /**
+             * backstack을 추가하면 onDestroyView()까지 수행 (onDestroy(), onDetach() X)
+             *                   → 다시 돌아오면 onCreateView()부터 시작
+             * backstack을 추가안하면 onDetach()까지 모두 수행
+             */
             fragmentTransaction.commit()
         }
         Log.i("=====>", "Fragment Life Cycle: onActivityCreated")
